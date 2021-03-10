@@ -23,8 +23,15 @@ function changeOutput() {
     inputString = inputString.slice(0, inputString.length-1);
   }
 
-  let numbers = inputString.split(/\+|\-|\*|\//g);
+  let numbers = inputString.split(/\+|\-|\*|\%/g);
   let operators = inputString.replace(/[0-9]|\./g, "").split("");
+
+  let percentage = operators.indexOf("%");
+  while (percentage !== -1) {
+    numbers.splice((percentage), 1, numbers[percentage - 1] / 100 * numbers[percentage]);
+    operators.splice(percentage, 1);
+    percentage = operators.indexOf("%");
+  }
 
   let divide = operators.indexOf("/");
   while (divide !== -1) {
@@ -54,11 +61,10 @@ function changeOutput() {
     add = operators.indexOf("+");
   }
 
-  if (numbers[0] === Infinity || numbers[0] === -Infinity) {
+  if (numbers[0] === Infinity || numbers[0] === -Infinity || isNaN(numbers[0])) {
     output.innerHTML = 'Invalid operation';
   } else {
     output.innerHTML = numbers[0];
-    console.log(numbers[0])
   }
 };
 
@@ -93,8 +99,8 @@ function pressedKey(e) {
   }
 
   if (operators.includes(e.key)) {
-    if (input.innerHTML === 'Invalid operation') {
-      input.innerHTML = '0' + e.target.innerHTML;
+    if (!input.innerHTML || input.innerHTML === 'Invalid operation') {
+      input.innerHTML = '0' + e.key;
       changeOutput();
       pressedEqual = false;
     }
@@ -145,7 +151,7 @@ for (let i = 0; i < number.length; i++) {
 
 for (let i = 0; i < operator.length; i++) {
   operator[i].addEventListener("click", function(e) {
-    if (input.innerHTML === 'Invalid operation') {
+    if (!input.innerHTML || input.innerHTML === 'Invalid operation') {
       input.innerHTML = '0' + e.target.innerHTML;
       changeOutput();
       pressedEqual = false;
