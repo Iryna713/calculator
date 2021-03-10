@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="icons/calculator.svg">
+  </head>
+
+  <body>
+    <h1 class="header">Calculator</h1>
+
+    <div class="calculator">
+      <form action="" class="calculator__form">
+        <!-- CALCULATOR ROW -->
+        <div class="calculator__row">
+          <div class="calculator__display">
+            <div class="calculator__input" id="display"></div>
+            <div class="calculator__output"></div>
+          </div>
+        </div>
+        <!-- CALCULATOR ROW -->
+        <div class="calculator__row">
+            <button type="button" value="ac" class="calculator__key calculator__clear">ac</button>
+            <button type="button" value="clear" class="calculator__key calculator__backspace">
+              <img src="icons/backspace.svg" alt="C" class="calculator__img">
+            </button>
+            <button type="button" value="%" class="calculator__key calculator__operator">%</button>
+            <button type="button" value="/" class="calculator__key calculator__operator">/</button>
+        </div>
+        <!-- CALCULATOR ROW -->
+        <div class="calculator__row">
+            <button type="button" value="7" class="calculator__key calculator__button">7</button>
+            <button type="button" value="8" class="calculator__key calculator__button">8</button>
+            <button type="button" value="9" class="calculator__key calculator__button">9</button>
+            <button type="button" value="*" class="calculator__key calculator__operator">*</button>
+        </div>
+        <!-- CALCULATOR ROW -->
+        <div class="calculator__row">
+            <button type="button" value="4" class="calculator__key calculator__button">4</button>
+            <button type="button" value="5" class="calculator__key calculator__button">5</button>
+            <button type="button" value="6" class="calculator__key calculator__button">6</button>
+            <button type="button" value="-" class="calculator__key calculator__operator">-</button>
+        </div>
+        <!-- CALCULATOR ROW -->
+        <div class="calculator__row">
+            <button type="button" value="1" class="calculator__key calculator__button">1</button>
+            <button type="button" value="2" class="calculator__key calculator__button">2</button>
+            <button type="button" value="3" class="calculator__key calculator__button">3</button>
+            <button type="button" value="+" class="calculator__key calculator__operator">+</button>
+        </div>
+        <!-- CALCULATOR ROW -->
+        <div class="calculator__row">
+            <button type="button" value="." class="calculator__key calculator__button">.</button>
+            <button type="button" value="0" class="calculator__key calculator__button">0</button>
+            <button type="button" value="=" class="calculator__key calculator__key--equal">=</button>
+        </div>
+      </form>
+    </div>
+
+    <script src="api.js"></script>
+  </body>
+
+</html>
