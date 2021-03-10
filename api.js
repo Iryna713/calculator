@@ -23,7 +23,7 @@ function changeOutput() {
     inputString = inputString.slice(0, inputString.length-1);
   }
 
-  let numbers = inputString.split(/\+|\-|\*|\%/g);
+  let numbers = inputString.split(/\+|\-|\*|\/|\%/g);
   let operators = inputString.replace(/[0-9]|\./g, "").split("");
 
   let percentage = operators.indexOf("%");
@@ -35,9 +35,11 @@ function changeOutput() {
 
   let divide = operators.indexOf("/");
   while (divide !== -1) {
+    console.log(numbers, '^', operators)
     numbers.splice(divide, 2, numbers[divide] / numbers[divide + 1]);
     operators.splice(divide, 1);
     divide = operators.indexOf("/");
+    console.log(divide, numbers[divide], numbers[divide + 1])
   }
 
   let multiply = operators.indexOf("*");
