@@ -1,22 +1,75 @@
 "use strict";
 
-let input = document.getElementById('display'); // input
-let output = document.querySelector('.calculator__output'); // output
-let number = document.querySelectorAll('.calculator__button'); // number buttons
-let operator = document.querySelectorAll('.calculator__operator'); // operator buttons
-let result = document.querySelector('.calculator__key--equal'); // equal button
-let clear = document.querySelector('.calculator__backspace'); // clear button
-let clearAll = document.querySelector('.calculator__clear'); // clearAll button
-let resultDisplayed = false; // flag to keep an eye on what output is displayed
+let input = document.getElementById('display');
+let output = document.querySelector('.calculator__output');
+let number = document.querySelectorAll('.calculator__button');
+let operator = document.querySelectorAll('.calculator__operator');
+let result = document.querySelector('.calculator__key--equal');
+let clear = document.querySelector('.calculator__backspace');
+let clearAll = document.querySelector('.calculator__clear');
+let pressedEqual = false;
 
 let arrOfNumAndOper = [];
 let num = [];
 
+function changeOutput() {
+  let inputString = input.innerHTML;
+
+  let lastChar = inputString[inputString.length-1];
+
+  if (lastChar === "+"
+    || lastChar === "-"
+    || lastChar === "*"
+    || lastChar === "/") {
+    inputString = inputString.slice(0, inputString.length-1);
+  }
+
+  let numbers = inputString.split(/\+|\-|\*|\//g);
+  let operators = inputString.replace(/[0-9]|\./g, "").split("");
+
+  let divide = operators.indexOf("/");
+  while (divide !== -1) {
+    numbers.splice(divide, 2, numbers[divide] / numbers[divide + 1]);
+    operators.splice(divide, 1);
+    divide = operators.indexOf("/");
+  }
+
+  let multiply = operators.indexOf("*");
+  while (multiply !== -1) {
+    numbers.splice(multiply, 2, numbers[multiply] * numbers[multiply + 1]);
+    operators.splice(multiply, 1);
+    multiply = operators.indexOf("*");
+  }
+
+  let subtract = operators.indexOf("-");
+  while (subtract !== -1) {
+    numbers.splice(subtract, 2, numbers[subtract] - numbers[subtract + 1]);
+    operators.splice(subtract, 1);
+    subtract = operators.indexOf("-");
+  }
+
+  let add = operators.indexOf("+");
+  while (add !== -1) {
+    numbers.splice(add, 2, parseFloat(numbers[add]) + parseFloat(numbers[add + 1]));
+    operators.splice(add, 1);
+    add = operators.indexOf("+");
+  }
+
+  output.innerHTML = numbers[0];
+};
+
 for (let i = 0; i < number.length; i++) {
   number[i].addEventListener("click", function(e) {
-    num.push(e.target.innerHTML);
-    input.innerHTML += e.target.innerHTML;
-    
+    if (pressedEqual) {
+      num = [e.target.innerHTML];
+      input.innerHTML = e.target.innerHTML;
+      changeOutput();
+      pressedEqual = false;
+    } else {
+      num.push(e.target.innerHTML);
+      input.innerHTML += e.target.innerHTML;
+      changeOutput();
+    }
   });
 };
 
@@ -31,59 +84,28 @@ for (let i = 0; i < operator.length; i++) {
       arrOfNumAndOper.pop();
       arrOfNumAndOper.push(e.target.innerHTML);
       input.innerHTML = arrOfNumAndOper.join("");
+      changeOutput();
     } else {
       arrOfNumAndOper.push(parseInt(num.join("")), e.target.innerHTML);
       num = [];
       input.innerHTML += e.target.innerHTML;
+      changeOutput();
+      pressedEqual = false;
     }
   });
 };
 
 result.addEventListener("click", function(e) {
-  if (!Number.isInteger(+input.innerHTML[input.innerHTML.length-1])) {
-    console.log(+input.innerHTML[input.innerHTML.length-1]);
-    return;
-  }
-
-  arrOfNumAndOper.push(parseInt(num.join("")));
-
-  let resultOfCalc = arrOfNumAndOper[0];
-  console.log(arrOfNumAndOper);
-
-  for (let i = 1; i < arrOfNumAndOper.length; i++) {
-    console.log(arrOfNumAndOper[i]);
-
-    switch(arrOfNumAndOper[i]) {
-      case "+":
-        resultOfCalc += arrOfNumAndOper[i+1];
-        break;
-      case "-":
-        resultOfCalc -= arrOfNumAndOper[i+1];
-        break;
-      case "*":
-        resultOfCalc *= arrOfNumAndOper[i+1];
-        break;
-      case "/":
-        resultOfCalc /= arrOfNumAndOper[i+1];
-        break;
-      default:
-        continue;
-    }
-  }
-
-  console.log("resultOfCalc: ", resultOfCalc);
-  output.innerHTML = resultOfCalc;
-  input.innerHTML = '';
-  num = [];
+  input.innerHTML = output.innerHTML;
+  num = [output.innerHTML.split('')];
   arrOfNumAndOper = [];
+  pressedEqual = true;
 });
 
 clear.addEventListener("click", function() {
-  console.log(num[num.length-1]);
-  // arrOfNumAndOper.pop();
-  // input.innerHTML = arrOfNumAndOper.join("");
   num.pop();
   input.innerHTML = input.innerHTML.slice(0, input.innerHTML.length - 1);
+  changeOutput();
 });
 
 clearAll.addEventListener("click", function() {
