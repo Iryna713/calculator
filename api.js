@@ -1,15 +1,15 @@
 "use strict";
 
-let calculator = document.querySelector('html');
-let input = document.getElementById('display');
-let output = document.querySelector('.calculator__output');
-let number = document.querySelectorAll('.calculator__button');
-let operator = document.querySelectorAll('.calculator__operator');
-let result = document.querySelector('.calculator__key--equal');
-let percentage = document.querySelector('.calculator__percentage');
-let clear = document.querySelector('.calculator__backspace');
-let clearAll = document.querySelector('.calculator__clear');
-let pressedEqual = false;
+const calculator = document.querySelector('html');
+const input = document.getElementById('display');
+const output = document.querySelector('.calculator__output');
+const number = document.querySelectorAll('.calculator__button');
+const operator = document.querySelectorAll('.calculator__operator');
+const result = document.querySelector('.calculator__key--equal');
+const percentage = document.querySelector('.calculator__percentage');
+const clear = document.querySelector('.calculator__backspace');
+const clearAll = document.querySelector('.calculator__clear');
+const pressedEqual = false;
 
 function changeOutput() {
   let inputString = input.innerHTML;
@@ -35,11 +35,9 @@ function changeOutput() {
 
   let divide = operators.indexOf("/");
   while (divide !== -1) {
-    console.log(numbers, '^', operators)
     numbers.splice(divide, 2, numbers[divide] / numbers[divide + 1]);
     operators.splice(divide, 1);
     divide = operators.indexOf("/");
-    console.log(divide, numbers[divide], numbers[divide + 1])
   }
 
   let multiply = operators.indexOf("*");
