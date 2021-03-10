@@ -1,16 +1,15 @@
 "use strict";
 
+let calculator = document.querySelector('html');
 let input = document.getElementById('display');
 let output = document.querySelector('.calculator__output');
 let number = document.querySelectorAll('.calculator__button');
 let operator = document.querySelectorAll('.calculator__operator');
 let result = document.querySelector('.calculator__key--equal');
+let percentage = document.querySelector('.calculator__percentage');
 let clear = document.querySelector('.calculator__backspace');
 let clearAll = document.querySelector('.calculator__clear');
 let pressedEqual = false;
-
-let arrOfNumAndOper = [];
-let num = [];
 
 function changeOutput() {
   let inputString = input.innerHTML;
@@ -55,18 +54,89 @@ function changeOutput() {
     add = operators.indexOf("+");
   }
 
-  output.innerHTML = numbers[0];
+  if (numbers[0] === Infinity || numbers[0] === -Infinity) {
+    output.innerHTML = 'Invalid operation';
+  } else {
+    output.innerHTML = numbers[0];
+    console.log(numbers[0])
+  }
 };
+
+function showResult(e) {
+  input.innerHTML = output.innerHTML;
+  pressedEqual = true;
+};
+
+function backspace() {
+  input.innerHTML = input.innerHTML.slice(0, input.innerHTML.length - 1);
+  changeOutput();
+};
+
+function deleteAll() {
+  input.innerHTML = "";
+  output.innerHTML = "";
+};
+
+function pressedKey(e) {
+  let numbers = '0123456789.';
+  let operators = '/*-+';
+
+  if (numbers.includes(e.key)) {
+    if (pressedEqual) {
+      input.innerHTML = e.key;
+      changeOutput();
+      pressedEqual = false;
+    } else {
+      input.innerHTML += e.key;
+      changeOutput();
+    }
+  }
+
+  if (operators.includes(e.key)) {
+    if (input.innerHTML === 'Invalid operation') {
+      input.innerHTML = '0' + e.target.innerHTML;
+      changeOutput();
+      pressedEqual = false;
+    }
+
+    let lastChar = input.innerHTML[input.innerHTML.length-1];
+
+    if (lastChar === "+"
+      || lastChar === "-"
+      || lastChar === "*"
+      || lastChar === "/") {
+      input.innerHTML = input.innerHTML.slice(0, input.innerHTML.length-1);
+      input.innerHTML += e.key;
+      changeOutput();
+    } else {
+      input.innerHTML += e.key;
+      changeOutput();
+      pressedEqual = false;
+    }
+  }
+
+  if (e.key === 'Enter') {
+    showResult();
+  }
+
+  if (e.key === 'Backspace') {
+    backspace();
+  }
+
+  if (e.key === 'Delete') {
+    deleteAll();
+  }
+}
+
+calculator.addEventListener("keydown", pressedKey);
 
 for (let i = 0; i < number.length; i++) {
   number[i].addEventListener("click", function(e) {
     if (pressedEqual) {
-      num = [e.target.innerHTML];
       input.innerHTML = e.target.innerHTML;
       changeOutput();
       pressedEqual = false;
     } else {
-      num.push(e.target.innerHTML);
       input.innerHTML += e.target.innerHTML;
       changeOutput();
     }
@@ -75,19 +145,22 @@ for (let i = 0; i < number.length; i++) {
 
 for (let i = 0; i < operator.length; i++) {
   operator[i].addEventListener("click", function(e) {
+    if (input.innerHTML === 'Invalid operation') {
+      input.innerHTML = '0' + e.target.innerHTML;
+      changeOutput();
+      pressedEqual = false;
+    }
+
     let lastChar = input.innerHTML[input.innerHTML.length-1];
 
     if (lastChar === "+"
       || lastChar === "-"
       || lastChar === "*"
       || lastChar === "/") {
-      arrOfNumAndOper.pop();
-      arrOfNumAndOper.push(e.target.innerHTML);
-      input.innerHTML = arrOfNumAndOper.join("");
+      input.innerHTML = input.innerHTML.slice(0, input.innerHTML.length-1);
+      input.innerHTML += e.target.innerHTML;
       changeOutput();
     } else {
-      arrOfNumAndOper.push(parseInt(num.join("")), e.target.innerHTML);
-      num = [];
       input.innerHTML += e.target.innerHTML;
       changeOutput();
       pressedEqual = false;
@@ -95,21 +168,8 @@ for (let i = 0; i < operator.length; i++) {
   });
 };
 
-result.addEventListener("click", function(e) {
-  input.innerHTML = output.innerHTML;
-  num = [output.innerHTML.split('')];
-  arrOfNumAndOper = [];
-  pressedEqual = true;
-});
+result.addEventListener("click", showResult);
 
-clear.addEventListener("click", function() {
-  num.pop();
-  input.innerHTML = input.innerHTML.slice(0, input.innerHTML.length - 1);
-  changeOutput();
-});
+clear.addEventListener("click", backspace);
 
-clearAll.addEventListener("click", function() {
-  arrOfNumAndOper = [];
-  input.innerHTML = "";
-  output.innerHTML = "";
-});
+clearAll.addEventListener("click", deleteAll);
