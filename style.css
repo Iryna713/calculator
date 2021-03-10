@@ -58,6 +58,10 @@
   width: 80%;
 }
 
+.calculator__img {
+  width: 80%;
+}
+
 .calculator__clear {
   background-color: #ccc;
 }
